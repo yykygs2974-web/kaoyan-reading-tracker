@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#f6f7fb">
+<title>考研英语阅读真题打卡</title>
+<style>
+:root{--bg:#f5f7fb;--card:#fff;--ink:#202637;--muted:#687287;--line:#e6eaf1;--accent:#3659d9;--accent-soft:#edf1ff;--good:#198754;--shadow:0 10px 30px rgba(28,42,75,.06)}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;line-height:1.55}
+.wrap{max-width:920px;margin:0 auto;padding:28px 16px 52px}.hero{padding:26px 24px;border-radius:24px;background:linear-gradient(135deg,#202f68,#4268e8);color:#fff;box-shadow:var(--shadow)}
+.eyebrow{font-size:12px;letter-spacing:.12em;opacity:.8;font-weight:700}.hero h1{font-size:clamp(25px,5vw,36px);line-height:1.2;margin:10px 0}.hero p{margin:8px 0 0;color:#e5eaff}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:16px 0}.stat,.panel,.week{background:var(--card);border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow)}.stat{padding:16px}.stat .label{font-size:13px;color:var(--muted)}.stat strong{display:block;font-size:25px;margin-top:4px}
+.panel{padding:20px;margin-top:16px}.section-head{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:12px}.section-head h2{font-size:18px;margin:0}.muted{color:var(--muted);font-size:13px}
+.progress-track{height:10px;background:#edf0f6;border-radius:999px;overflow:hidden}.progress-fill{height:100%;width:0;background:linear-gradient(90deg,#4d6ef1,#21a179);border-radius:999px;transition:width .2s}
+.progress-meta{display:flex;justify-content:space-between;margin-top:8px;font-size:13px;color:var(--muted)}
+.weeks{display:grid;gap:12px;margin-top:16px}.week{padding:17px}.week-top{display:flex;justify-content:space-between;gap:12px;align-items:flex-start}.week h3{font-size:16px;margin:0}.week .date{font-size:12px;color:var(--muted);margin-top:3px}.count{font-weight:700;font-size:13px;white-space:nowrap;color:var(--accent)}
+.tiles{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin-top:14px}.tile{border:1px solid var(--line);background:#fafbfe;border-radius:12px;padding:10px 8px;text-align:left;cursor:pointer;min-height:68px;color:var(--ink);transition:.15s}.tile:hover{border-color:#a9b7fb}.tile .year{font-weight:700;font-size:13px}.tile .sub{font-size:11px;color:var(--muted);margin-top:3px}.tile.done{background:#eaf8f0;border-color:#a7dfbd}.tile.done .sub{color:#198754}.tile.done .year:before{content:"✓ ";color:#198754}
+.actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:14px}.btn{border:1px solid var(--line);border-radius:11px;padding:10px 14px;font-weight:650;background:#fff;color:var(--ink);cursor:pointer}.btn.primary{background:var(--accent);color:#fff;border-color:var(--accent)}.btn:hover{filter:brightness(.97)}
+.tip{display:flex;gap:12px;align-items:flex-start}.tip .emoji{font-size:23px}.tip strong{display:block;margin-bottom:2px}.tip p{margin:0;color:var(--muted);font-size:13px}
+.footer{text-align:center;color:var(--muted);font-size:12px;margin-top:20px}
+@media(min-width:680px){.tiles{grid-template-columns:repeat(4,minmax(0,1fr))}.weeks{grid-template-columns:repeat(2,minmax(0,1fr))}.week:last-child{grid-column:1/-1}.week:last-child .tiles{grid-template-columns:repeat(4,minmax(0,1fr))}}
+@media(max-width:380px){.wrap{padding:16px 10px 36px}.hero{padding:22px 18px}.stat{padding:12px}.stat strong{font-size:21px}.tiles{gap:6px}.tile{padding:8px 6px;min-height:62px}.tile .year{font-size:12px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="hero">
+    <div class="eyebrow">2027 考研英语 · READING TRACKER</div>
+    <h1>英语阅读真题打卡</h1>
+    <p>2007—2023 年，共 68 篇阅读。每完成一篇就点亮一格，稳步推进，不只刷题，也要复盘。</p>
+  </header>
+
+  <section class="stats" aria-label="学习统计">
+    <div class="stat"><div class="label">累计完成</div><strong id="doneCount">0 <small style="font-size:14px;color:#687287">/ 68 篇</small></strong></div>
+    <div class="stat"><div class="label">完成比例</div><strong id="percent">0%</strong></div>
+    <div class="stat"><div class="label">已完成年份</div><strong id="yearCount">0 <small style="font-size:14px;color:#687287">/ 17 年</small></strong></div>
+  </section>
+
+  <section class="panel">
+    <div class="section-head"><h2>总进度</h2><span class="muted" id="status">今天也向前一步 ✨</span></div>
+    <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+    <div class="progress-meta"><span id="leftText">还剩 68 篇</span><span>目标：考前 5 天完成</span></div>
+  </section>
+
+  <section class="weeks" id="weeks"></section>
+
+  <section class="panel">
+    <div class="section-head"><h2>复盘提醒</h2><span>📚</span></div>
+    <div class="tip"><div class="emoji">⏱️</div><div><strong>做题 20—25 分钟 / 篇</strong><p>先独立完成，给每道题标出原文依据，尽量不边做边看答案。</p></div></div>
+    <div style="height:14px"></div>
+    <div class="tip"><div class="emoji">🔍</div><div><strong>精读 15—20 分钟 / 篇</strong><p>复盘错因、定位句、长难句和干扰选项；当天的问题当天弄懂。</p></div></div>
+    <div style="height:14px"></div>
+    <div class="tip"><div class="emoji">🔁</div><div><strong>每天回顾 10 分钟</strong><p>复习前几天的错题和高频词，不必整篇抄写。</p></div></div>
+  </section>
+
+  <section class="panel">
+    <div class="section-head"><h2>数据管理</h2><span class="muted">进度自动保存在当前浏览器</span></div>
+    <p class="muted">换手机或清除浏览器数据前，可以导出备份；也可以导入之前的备份文件。</p>
+    <div class="actions">
+      <button class="btn primary" id="exportBtn">导出进度备份</button>
+      <button class="btn" id="importBtn">导入备份</button>
+      <button class="btn" id="resetBtn">重置所有打卡</button>
+      <input type="file" id="importFile" accept="application/json,.json" hidden>
+    </div>
+  </section>
+  <div class="footer">把每一篇做透，比单纯追求速度更重要。加油！💪</div>
+</div>
+<script>
+const plan = [
+  {week:"第 1 周",range:"2007—2008",years:[2007,2008],date:"10/9—10/15"},
+  {week:"第 2 周",range:"2009—2010",years:[2009,2010],date:"10/16—10/22"},
+  {week:"第 3 周",range:"2011—2012",years:[2011,2012],date:"10/23—10/29"},
+  {week:"第 4 周",range:"2013—2014",years:[2013,2014],date:"10/30—11/5"},
+  {week:"第 5 周",range:"2015—2016",years:[2015,2016],date:"11/6—11/12"},
+  {week:"第 6 周",range:"2017—2018",years:[2017,2018],date:"11/13—11/19"},
+  {week:"第 7 周",range:"2019—2020",years:[2019,2020],date:"11/20—11/26"},
+  {week:"第 8 周",range:"2021—2022",years:[2021,2022],date:"11/27—12/3"},
+  {week:"第 9 周",range:"2023",years:[2023],date:"12/4—12/9"}
+];
+const KEY="kaoyan-reading-tracker-v1";
+let checked = new Set();
+try { checked = new Set(JSON.parse(localStorage.getItem(KEY)||"[]")); } catch(e) {}
+const key=(year,passage)=>`${year}-${passage}`;
+function save(){try{localStorage.setItem(KEY,JSON.stringify([...checked]));}catch(e){}}
+function render(){
+ const root=document.getElementById("weeks");root.innerHTML="";
+ plan.forEach((w,wi)=>{
+  const card=document.createElement("article");card.className="week";
+  const top=document.createElement("div");top.className="week-top";
+  top.innerHTML=`<div><h3>${w.week} · ${w.range} 年</h3><div class="date">计划时间：${w.date}</div></div><div class="count" id="weekCount${wi}">0/${w.years.length*4} 篇</div>`;
+  card.appendChild(top);
+  const tiles=document.createElement("div");tiles.className="tiles";
+  w.years.forEach(year=>{
+   for(let p=1;p<=4;p++){
+    const k=key(year,p),isDone=checked.has(k);
+    const b=document.createElement("button");b.className="tile"+(isDone?" done":"");
+    b.setAttribute("aria-pressed",String(isDone));
+    b.setAttribute("aria-label",`${year} 年第 ${p} 篇阅读，${isDone?"已完成":"未完成"}`);
+    b.innerHTML=`<div class="year">${year} 年</div><div class="sub">阅读 ${p} · ${isDone?"已完成":"点击打卡"}</div>`;
+    b.addEventListener("click",()=>{checked.has(k)?checked.delete(k):checked.add(k);save();render();});
+    tiles.appendChild(b);
+   }
+  });
+  card.appendChild(tiles);root.appendChild(card);
+  document.getElementById(`weekCount${wi}`).textContent=`${w.years.reduce((n,y)=>n+[1,2,3,4].filter(p=>checked.has(key(y,p))).length,0)}/${w.years.length*4} 篇`;
+ });
+ const total=68,done=checked.size,yearsDone=new Set([...checked].map(k=>k.split("-")[0])).size;
+ document.getElementById("doneCount").innerHTML=`${done} <small style="font-size:14px;color:#687287">/ ${total} 篇</small>`;
+ document.getElementById("percent").textContent=Math.round(done/total*100)+"%";
+ document.getElementById("yearCount").innerHTML=`${yearsDone} <small style="font-size:14px;color:#687287">/ 17 年</small>`;
+ document.getElementById("progressFill").style.width=(done/total*100)+"%";
+ document.getElementById("leftText").textContent=`还剩 ${total-done} 篇`;
+ document.getElementById("status").textContent=done===total?"全部完成，太棒了！🎉":done===0?"今天也向前一步 ✨":`已稳步完成 ${done} 篇，继续保持！`;
+}
+document.getElementById("exportBtn").addEventListener("click",()=>{
+ const blob=new Blob([JSON.stringify({app:"考研英语阅读真题打卡",version:1,checked:[...checked]},null,2)],{type:"application/json"});
+ const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="考研英语阅读打卡备份.json";a.click();URL.revokeObjectURL(a.href);
+});
+document.getElementById("importBtn").addEventListener("click",()=>document.getElementById("importFile").click());
+document.getElementById("importFile").addEventListener("change",async e=>{
+ const file=e.target.files[0];if(!file)return;
+ try{const data=JSON.parse(await file.text());if(!Array.isArray(data.checked))throw Error("格式错误");
+ const valid=data.checked.filter(k=>/^(200[7-9]|201[0-9]|202[0-3])-[1-4]$/.test(k));checked=new Set(valid);save();render();alert("进度导入成功！");}
+ catch(err){alert("无法读取这个备份文件，请选择本网站导出的 JSON 文件。");}
+ e.target.value="";
+});
+document.getElementById("resetBtn").addEventListener("click",()=>{
+ if(confirm("确定清空全部 68 篇的打卡记录吗？此操作无法撤销。")){checked.clear();save();render();}
+});
+render();
+</script>
+</body>
+</html>
