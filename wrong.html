@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>错题本 · 考研英语阅读</title>
+<style>
+:root{
+  --bg:#f2f4f7; --card:#ffffff; --ink:#1b2430; --sub:#66707d; --line:#d9dee5;
+  --accent:#23456e; --accent-ink:#ffffff; --wrong:#c23b2e; --ok:#2f7d55; --chip:#e8edf3;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#10151c; --card:#18202a; --ink:#e7ebf0; --sub:#8f9aa8; --line:#2b3643;
+    --accent:#8ab4e8; --accent-ink:#10151c; --wrong:#ef7d70; --ok:#6fcf9b; --chip:#222d3a;
+  }
+}
+*{box-sizing:border-box}
+html{height:100%}
+body{margin:0;background:var(--bg);color:var(--ink);
+  font:16px/1.6 -apple-system,"PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif}
+.wrap{max-width:720px;margin:0 auto;padding:16px 16px 64px}
+header{display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin:8px 0 16px}
+h1{font:700 26px/1.2 "Songti SC","Noto Serif SC",serif;margin:0}
+a.back{color:var(--accent);text-decoration:none;font-size:15px}
+.stats{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px 16px;margin-bottom:14px}
+.totals{display:flex;gap:24px;margin-bottom:10px}
+.totals b{font:700 28px/1 "Songti SC",serif;display:block}
+.totals span{font-size:13px;color:var(--sub)}
+.bars{display:grid;gap:6px}
+.bar{display:grid;grid-template-columns:5.5em 1fr 2em;gap:8px;align-items:center;font-size:13px;color:var(--sub)}
+.bar i{display:block;height:8px;border-radius:4px;background:var(--wrong);min-width:2px}
+.bar em{font-style:normal;text-align:right}
+details.add{background:var(--card);border:1px solid var(--line);border-radius:10px;margin-bottom:14px}
+details.add>summary{padding:14px 16px;font-weight:600;cursor:pointer;list-style:none;color:var(--accent)}
+details.add>summary::-webkit-details-marker{display:none}
+form{padding:0 16px 16px;display:grid;gap:12px}
+label.f{display:grid;gap:4px;font-size:13px;color:var(--sub)}
+.row{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+select,input[type=number],textarea{width:100%;font:inherit;color:var(--ink);background:var(--bg);
+  border:1px solid var(--line);border-radius:8px;padding:10px}
+textarea{min-height:72px;resize:vertical}
+.seg{display:flex;gap:6px}
+.seg button{flex:1;padding:10px 0;font:600 16px inherit;font-family:inherit;border:1px solid var(--line);
+  background:var(--bg);color:var(--ink);border-radius:8px;cursor:pointer}
+.seg button.on.mine{background:var(--wrong);color:#fff;border-color:var(--wrong)}
+.seg button.on.right{background:var(--ok);color:#fff;border-color:var(--ok)}
+button.primary{background:var(--accent);color:var(--accent-ink);border:0;border-radius:8px;
+  padding:12px;font:600 16px inherit;font-family:inherit;cursor:pointer}
+button:focus-visible,select:focus-visible,input:focus-visible,textarea:focus-visible,summary:focus-visible{
+  outline:2px solid var(--accent);outline-offset:2px}
+.filters{display:flex;gap:8px;overflow-x:auto;padding-bottom:6px;margin-bottom:8px}
+.filters button{white-space:nowrap;border:1px solid var(--line);background:var(--chip);color:var(--ink);
+  border-radius:999px;padding:6px 14px;font:inherit;font-size:14px;cursor:pointer}
+.filters button.on{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.item{background:var(--card);border:1px solid var(--line);border-left:4px solid var(--wrong);
+  border-radius:10px;padding:12px 14px;margin-bottom:10px}
+.item.done{border-left-color:var(--ok);opacity:.7}
+.item .top{display:flex;justify-content:space-between;align-items:baseline;gap:8px}
+.item .src{font-weight:700}
+.ans{font-size:15px}
+.ans .x{color:var(--wrong);font-weight:700;text-decoration:line-through}
+.ans .v{color:var(--ok);font-weight:700}
+.tag{display:inline-block;background:var(--chip);border-radius:6px;padding:0 8px;font-size:13px;color:var(--sub)}
+.note{margin:6px 0 0;font-size:14px;color:var(--sub);white-space:pre-wrap}
+.acts{display:flex;gap:16px;margin-top:8px}
+.acts button{background:none;border:0;padding:4px 0;font:inherit;font-size:14px;color:var(--accent);cursor:pointer}
+.acts button.del{color:var(--wrong)}
+.empty{text-align:center;color:var(--sub);padding:32px 0}
+.tools{display:flex;gap:16px;justify-content:center;margin-top:24px}
+.tools button{background:none;border:0;color:var(--accent);font:inherit;font-size:14px;cursor:pointer}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>错题本</h1>
+    <a class="back" href="index.html">返回打卡</a>
+  </header>
+
+  <section class="stats" aria-label="统计">
+    <div class="totals">
+      <div><b id="sTotal">0</b><span>错题总数</span></div>
+      <div><b id="sOpen">0</b><span>未掌握</span></div>
+      <div><b id="sWeek">0</b><span>近 7 天新增</span></div>
+    </div>
+    <div class="bars" id="bars"></div>
+  </section>
+
+  <details class="add" id="addBox" open>
+    <summary>记一道错题</summary>
+    <form id="form">
+      <div class="row">
+        <label class="f">年份<select id="year"></select></label>
+        <label class="f">Text<select id="text"><option>1</option><option>2</option><option>3</option><option>4</option></select></label>
+        <label class="f">题号<input id="qno" type="number" min="1" max="20" value="1" inputmode="numeric"></label>
+      </div>
+      <div class="f" style="display:grid;gap:4px;font-size:13px;color:var(--sub)">我的答案
+        <div class="seg" id="mine"></div></div>
+      <div class="f" style="display:grid;gap:4px;font-size:13px;color:var(--sub)">正确答案
+        <div class="seg" id="right"></div></div>
+      <label class="f">错因<select id="reason"></select></label>
+      <label class="f">备注（定位句、生词、教训）<textarea id="memo" placeholder="例如：第 3 段 however 后才是作者态度"></textarea></label>
+      <button class="primary" type="submit">保存错题</button>
+    </form>
+  </details>
+
+  <div class="filters" id="filters"></div>
+  <div id="list"></div>
+
+  <div class="tools">
+    <button id="exp">导出备份</button>
+    <button id="imp">导入备份</button>
+    <input id="file" type="file" accept="application/json" hidden>
+  </div>
+</div>
+
+<script>
+(function(){
+  var KEY='kaoyan-wrong-v1';
+  var REASONS=['词汇不会','长难句没读懂','定位错误','过度推断','主旨/态度偏了','没时间','粗心','其他'];
+  var data=[];
+  var filter={reason:'全部',status:'open'};
+  var pick={mine:'',right:''};
+
+  function load(){try{data=JSON.parse(localStorage.getItem(KEY)||'[]')}catch(e){data=[]}}
+  function save(){try{localStorage.setItem(KEY,JSON.stringify(data))}catch(e){alert('浏览器无法保存，请检查是否开启了无痕模式')}}
+  function $(id){return document.getElementById(id)}
+  function esc(s){return String(s).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
+
+  // form setup
+  var ys='';for(var y=2023;y>=2007;y--)ys+='<option>'+y+'</option>';$('year').innerHTML=ys;
+  $('reason').innerHTML=REASONS.map(function(r){return'<option>'+r+'</option>'}).join('');
+  ['mine','right'].forEach(function(k){
+    var box=$(k);
+    'ABCD'.split('').forEach(function(c){
+      var b=document.createElement('button');b.type='button';b.textContent=c;
+      b.onclick=function(){pick[k]=c;[].forEach.call(box.children,function(x){x.className=''});b.className='on '+k};
+      box.appendChild(b);
+    });
+  });
+
+  $('form').onsubmit=function(e){
+    e.preventDefault();
+    if(!pick.mine||!pick.right){alert('请选择“我的答案”和“正确答案”');return}
+    if(pick.mine===pick.right){alert('两个答案相同，不算错题');return}
+    data.unshift({id:Date.now(),year:$('year').value,text:$('text').value,q:$('qno').value,
+      mine:pick.mine,right:pick.right,reason:$('reason').value,memo:$('memo').value.trim(),
+      done:false,at:Date.now()});
+    save();$('memo').value='';
+    pick={mine:'',right:''};['mine','right'].forEach(function(k){[].forEach.call($(k).children,function(x){x.className=''})});
+    $('qno').value=Math.min(20,(+$('qno').value||0)+1);
+    render();
+  };
+
+  function render(){
+    var week=Date.now()-7*864e5;
+    $('sTotal').textContent=data.length;
+    $('sOpen').textContent=data.filter(function(d){return!d.done}).length;
+    $('sWeek').textContent=data.filter(function(d){return d.at>week}).length;
+
+    var cnt={};REASONS.forEach(function(r){cnt[r]=0});
+    data.forEach(function(d){cnt[d.reason]=(cnt[d.reason]||0)+1});
+    var max=Math.max.apply(null,Object.keys(cnt).map(function(k){return cnt[k]}).concat([1]));
+    $('bars').innerHTML=data.length?REASONS.filter(function(r){return cnt[r]}).map(function(r){
+      return'<div class="bar"><span>'+r+'</span><i style="width:'+(cnt[r]/max*100)+'%"></i><em>'+cnt[r]+'</em></div>'}).join(''):
+      '<div class="empty" style="padding:4px 0">还没有数据，记下第一道错题吧</div>';
+
+    var fs=[['status','open','未掌握'],['status','done','已掌握'],['status','all','全部状态']];
+    var html=fs.map(function(f){return'<button data-k="status" data-v="'+f[1]+'" class="'+(filter.status===f[1]?'on':'')+'">'+f[2]+'</button>'}).join('');
+    html+=['全部'].concat(REASONS).map(function(r){return'<button data-k="reason" data-v="'+r+'" class="'+(filter.reason===r?'on':'')+'">'+r+'</button>'}).join('');
+    $('filters').innerHTML=html;
+    [].forEach.call($('filters').children,function(b){b.onclick=function(){filter[b.dataset.k]=b.dataset.v;render()}});
+
+    var rows=data.filter(function(d){
+      if(filter.status==='open'&&d.done)return false;
+      if(filter.status==='done'&&!d.done)return false;
+      return filter.reason==='全部'||d.reason===filter.reason;
+    });
+    $('list').innerHTML=rows.length?rows.map(function(d){
+      return'<article class="item'+(d.done?' done':'')+'">'+
+        '<div class="top"><span class="src">'+d.year+' 年 Text '+d.text+' 第 '+d.q+' 题</span><span class="tag">'+esc(d.reason)+'</span></div>'+
+        '<div class="ans">我选 <span class="x">'+d.mine+'</span>　正确 <span class="v">'+d.right+'</span></div>'+
+        (d.memo?'<p class="note">'+esc(d.memo)+'</p>':'')+
+        '<div class="acts"><button data-a="done" data-id="'+d.id+'">'+(d.done?'标为未掌握':'标为已掌握')+'</button>'+
+        '<button class="del" data-a="del" data-id="'+d.id+'">删除</button></div></article>'}).join(''):
+      '<div class="empty">这里没有错题。点上方“记一道错题”添加。</div>';
+    [].forEach.call($('list').querySelectorAll('button[data-a]'),function(b){
+      b.onclick=function(){
+        var id=+b.dataset.id,i=data.findIndex(function(x){return x.id===id});
+        if(i<0)return;
+        if(b.dataset.a==='del'){if(confirm('确定删除这道错题？'))data.splice(i,1)}
+        else data[i].done=!data[i].done;
+        save();render();
+      };
+    });
+  }
+
+  $('exp').onclick=function(){
+    var blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
+    var a=document.createElement('a');a.href=URL.createObjectURL(blob);
+    a.download='kaoyan-wrong-'+new Date().toISOString().slice(0,10)+'.json';a.click();
+  };
+  $('imp').onclick=function(){$('file').click()};
+  $('file').onchange=function(){
+    var f=this.files[0];if(!f)return;
+    var r=new FileReader();
+    r.onload=function(){
+      try{
+        var arr=JSON.parse(r.result);if(!Array.isArray(arr))throw 0;
+        var ids={};data.forEach(function(d){ids[d.id]=1});
+        arr.forEach(function(d){if(d&&d.id&&!ids[d.id])data.push(d)});
+        data.sort(function(a,b){return b.at-a.at});save();render();alert('导入完成');
+      }catch(e){alert('文件格式不对，请选择从本页导出的 JSON')}
+    };
+    r.readAsText(f);this.value='';
+  };
+
+  load();render();
+})();
+</script>
+</body>
+</html>
