@@ -18,6 +18,8 @@
 .tiles{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin-top:14px}.tile{border:1px solid var(--line);background:#fafbfe;border-radius:12px;padding:10px 8px;text-align:left;cursor:pointer;min-height:68px;color:var(--ink);transition:.15s}.tile:hover{border-color:#a9b7fb}.tile .year{font-weight:700;font-size:13px}.tile .sub{font-size:11px;color:var(--muted);margin-top:3px}.tile.done{background:#eaf8f0;border-color:#a7dfbd}.tile.done .sub{color:#198754}.tile.done .year:before{content:"✓ ";color:#198754}
 .actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:14px}.btn{border:1px solid var(--line);border-radius:11px;padding:10px 14px;font-weight:650;background:#fff;color:var(--ink);cursor:pointer}.btn.primary{background:var(--accent);color:#fff;border-color:var(--accent)}.btn:hover{filter:brightness(.97)}
 .tip{display:flex;gap:12px;align-items:flex-start}.tip .emoji{font-size:23px}.tip strong{display:block;margin-bottom:2px}.tip p{margin:0;color:var(--muted);font-size:13px}
+.wb{display:inline-block;margin-top:4px;padding:0 6px;border-radius:6px;background:#fdecea;color:#c23b2e;font-size:11px;font-weight:700}.tile.hasw{border-color:#f1b8b2}
+.wstats{display:flex;gap:28px;margin:4px 0 2px}.wstats strong{display:block;font-size:25px}.wstats span{font-size:13px;color:var(--muted)}a.btn{display:inline-block;text-decoration:none}
 .footer{text-align:center;color:var(--muted);font-size:12px;margin-top:20px}
 @media(min-width:680px){.tiles{grid-template-columns:repeat(4,minmax(0,1fr))}.weeks{grid-template-columns:repeat(2,minmax(0,1fr))}.week:last-child{grid-column:1/-1}.week:last-child .tiles{grid-template-columns:repeat(4,minmax(0,1fr))}}
 @media(max-width:380px){.wrap{padding:16px 10px 36px}.hero{padding:22px 18px}.stat{padding:12px}.stat strong{font-size:21px}.tiles{gap:6px}.tile{padding:8px 6px;min-height:62px}.tile .year{font-size:12px}}
@@ -43,6 +45,15 @@
     <div class="progress-meta"><span id="leftText">还剩 68 篇</span><span>目标：考前 5 天完成</span></div>
   </section>
 
+  <section class="panel">
+    <div class="section-head"><h2>错题本</h2><span class="muted">记录错因，针对性复盘</span></div>
+    <div class="wstats">
+      <div><strong id="wTotal">0</strong><span>错题总数</span></div>
+      <div><strong id="wOpen">0</strong><span>未掌握</span></div>
+    </div>
+    <div class="actions"><a class="btn primary" href="wrong.html">打开错题本</a></div>
+  </section>
+
   <section class="weeks" id="weeks"></section>
 
   <section class="panel">
@@ -56,7 +67,7 @@
 
   <section class="panel">
     <div class="section-head"><h2>数据管理</h2><span class="muted">进度自动保存在当前浏览器</span></div>
-    <p class="muted">换手机或清除浏览器数据前，可以导出备份；也可以导入之前的备份文件。</p>
+    <p class="muted">换手机或清除浏览器数据前，可以导出备份；也可以导入之前的备份文件。错题本的数据需要在错题本页面单独备份。</p>
     <div class="actions">
       <button class="btn primary" id="exportBtn">导出进度备份</button>
       <button class="btn" id="importBtn">导入备份</button>
@@ -82,8 +93,12 @@ const KEY="kaoyan-reading-tracker-v1";
 let checked = new Set();
 try { checked = new Set(JSON.parse(localStorage.getItem(KEY)||"[]")); } catch(e) {}
 const key=(year,passage)=>`${year}-${passage}`;
+function wrongList(){try{const a=JSON.parse(localStorage.getItem("kaoyan-wrong-v1")||"[]");return Array.isArray(a)?a:[];}catch(e){return[];}}
 function save(){try{localStorage.setItem(KEY,JSON.stringify([...checked]));}catch(e){}}
 function render(){
+ const wl=wrongList(),wc={};wl.forEach(d=>{if(!d.done){const k=key(d.year,d.text);wc[k]=(wc[k]||0)+1;}});
+ document.getElementById("wTotal").textContent=wl.length;
+ document.getElementById("wOpen").textContent=wl.filter(d=>!d.done).length;
  const root=document.getElementById("weeks");root.innerHTML="";
  plan.forEach((w,wi)=>{
   const card=document.createElement("article");card.className="week";
@@ -94,10 +109,11 @@ function render(){
   w.years.forEach(year=>{
    for(let p=1;p<=4;p++){
     const k=key(year,p),isDone=checked.has(k);
-    const b=document.createElement("button");b.className="tile"+(isDone?" done":"");
+    const wn=wc[k]||0;
+    const b=document.createElement("button");b.className="tile"+(isDone?" done":"")+(wn?" hasw":"");
     b.setAttribute("aria-pressed",String(isDone));
-    b.setAttribute("aria-label",`${year} 年第 ${p} 篇阅读，${isDone?"已完成":"未完成"}`);
-    b.innerHTML=`<div class="year">${year} 年</div><div class="sub">阅读 ${p} · ${isDone?"已完成":"点击打卡"}</div>`;
+    b.setAttribute("aria-label",`${year} 年第 ${p} 篇阅读，${isDone?"已完成":"未完成"}${wn?`，未掌握错题 ${wn} 道`:""}`);
+    b.innerHTML=`<div class="year">${year} 年</div><div class="sub">阅读 ${p} · ${isDone?"已完成":"点击打卡"}</div>${wn?`<span class="wb">错 ${wn}</span>`:""}`;
     b.addEventListener("click",()=>{checked.has(k)?checked.delete(k):checked.add(k);save();render();});
     tiles.appendChild(b);
    }
@@ -129,6 +145,7 @@ document.getElementById("resetBtn").addEventListener("click",()=>{
  if(confirm("确定清空全部 68 篇的打卡记录吗？此操作无法撤销。")){checked.clear();save();render();}
 });
 render();
+window.addEventListener("pageshow",e=>{if(e.persisted)render();});
 </script>
 </body>
 </html>
