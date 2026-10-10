@@ -133,6 +133,7 @@ textarea{min-height:76px;resize:vertical}
     if(!pick.mine||!pick.right){alert("请选择“我的答案”和“正确答案”");return}
     if(pick.mine===pick.right){alert("两个答案相同，不算错题");return}
     var q=+$("qno").value;
+    if(data.some(function(d){return String(d.year)===$("year").value&&String(d.q)===String(q)})){alert("这道题已经记录过了，请先删除旧记录再重录");return}
     data.unshift({id:Date.now(),year:$("year").value,text:String(textOf(q)),q:String(q),
       mine:pick.mine,right:pick.right,reason:$("reason").value,memo:$("memo").value.trim(),done:false,at:Date.now()});
     save();$("memo").value="";

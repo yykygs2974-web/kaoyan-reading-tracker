@@ -20,6 +20,10 @@
 .tip{display:flex;gap:12px;align-items:flex-start}.tip .emoji{font-size:23px}.tip strong{display:block;margin-bottom:2px}.tip p{margin:0;color:var(--muted);font-size:13px}
 .wb{display:inline-block;margin-top:4px;padding:0 6px;border-radius:6px;background:#fdecea;color:#c23b2e;font-size:11px;font-weight:700}.tile.hasw{border-color:#f1b8b2}
 .wstats{display:flex;gap:28px;margin:4px 0 2px}.wstats strong{display:block;font-size:25px}.wstats span{font-size:13px;color:var(--muted)}a.btn{display:inline-block;text-decoration:none}
+.acc{grid-column:1/-1;display:flex;align-items:center;gap:10px;font-size:13px;color:var(--muted);padding:2px 2px 8px}
+.acc .acc-track{flex:1;height:8px;background:#edf0f6;border-radius:999px;overflow:hidden}.acc i{display:block;height:100%;border-radius:999px;background:var(--good)}
+.acc strong{font-size:14px;color:var(--ink);min-width:2.8em;text-align:right}.acc small{font-size:12px;min-width:3.4em}
+.acc.mid i{background:#d9962b}.acc.low i{background:#c23b2e}.acc.none i{width:0}
 .footer{text-align:center;color:var(--muted);font-size:12px;margin-top:20px}
 @media(min-width:680px){.tiles{grid-template-columns:repeat(4,minmax(0,1fr))}.weeks{grid-template-columns:repeat(2,minmax(0,1fr))}.week:last-child{grid-column:1/-1}.week:last-child .tiles{grid-template-columns:repeat(4,minmax(0,1fr))}}
 @media(max-width:380px){.wrap{padding:16px 10px 36px}.hero{padding:22px 18px}.stat{padding:12px}.stat strong{font-size:21px}.tiles{gap:6px}.tile{padding:8px 6px;min-height:62px}.tile .year{font-size:12px}}
@@ -95,8 +99,16 @@ try { checked = new Set(JSON.parse(localStorage.getItem(KEY)||"[]")); } catch(e)
 const key=(year,passage)=>`${year}-${passage}`;
 function wrongList(){try{const a=JSON.parse(localStorage.getItem("kaoyan-wrong-v1")||"[]");return Array.isArray(a)?a:[];}catch(e){return[];}}
 function save(){try{localStorage.setItem(KEY,JSON.stringify([...checked]));}catch(e){}}
+function accRow(year,wAll){
+ const att=[1,2,3,4].filter(p=>checked.has(key(year,p))||wAll[key(year,p)]);
+ const total=att.length*5,wrong=att.reduce((n,p)=>n+Math.min(5,wAll[key(year,p)]||0),0),right=total-wrong;
+ const pct=total?Math.round(right/total*100):null;
+ const d=document.createElement("div");d.className="acc"+(pct===null?" none":pct>=80?"":pct>=60?" mid":" low");
+ d.innerHTML=`<span>${year} 年正确率</span><div class="acc-track"><i style="width:${pct||0}%"></i></div><strong>${pct===null?"—":pct+"%"}</strong><small>${pct===null?"未开始":right+"/"+total}</small>`;
+ return d;
+}
 function render(){
- const wl=wrongList(),wc={};wl.forEach(d=>{if(!d.done){const k=key(d.year,d.text);wc[k]=(wc[k]||0)+1;}});
+ const wl=wrongList(),wc={},wAll={};wl.forEach(d=>{const k=key(d.year,d.text);wAll[k]=(wAll[k]||0)+1;if(!d.done)wc[k]=(wc[k]||0)+1;});
  document.getElementById("wTotal").textContent=wl.length;
  document.getElementById("wOpen").textContent=wl.filter(d=>!d.done).length;
  const root=document.getElementById("weeks");root.innerHTML="";
@@ -117,6 +129,7 @@ function render(){
     b.addEventListener("click",()=>{checked.has(k)?checked.delete(k):checked.add(k);save();render();});
     tiles.appendChild(b);
    }
+   tiles.appendChild(accRow(year,wAll));
   });
   card.appendChild(tiles);root.appendChild(card);
   document.getElementById(`weekCount${wi}`).textContent=`${w.years.reduce((n,y)=>n+[1,2,3,4].filter(p=>checked.has(key(y,p))).length,0)}/${w.years.length*4} 篇`;
