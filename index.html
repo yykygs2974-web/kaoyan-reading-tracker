@@ -22,7 +22,7 @@
 .wstats{display:flex;gap:28px;margin:4px 0 2px}.wstats strong{display:block;font-size:25px}.wstats span{font-size:13px;color:var(--muted)}a.btn{display:inline-block;text-decoration:none}
 .acc{grid-column:1/-1;display:flex;align-items:center;gap:10px;font-size:13px;color:var(--muted);padding:2px 2px 8px}
 .acc .acc-track{flex:1;height:8px;background:#edf0f6;border-radius:999px;overflow:hidden}.acc i{display:block;height:100%;border-radius:999px;background:var(--good)}
-.acc strong{font-size:14px;color:var(--ink);min-width:2.8em;text-align:right}.acc small{font-size:12px;min-width:3.4em}
+.acc strong{font-size:14px;color:var(--ink);min-width:2.8em;text-align:right}.acc small{font-size:12px;min-width:5.2em;text-align:right}.acc small b{font-size:14px;color:var(--ink)}
 .acc.mid i{background:#d9962b}.acc.low i{background:#c23b2e}.acc.none i{width:0}
 .footer{text-align:center;color:var(--muted);font-size:12px;margin-top:20px}
 @media(min-width:680px){.tiles{grid-template-columns:repeat(4,minmax(0,1fr))}.weeks{grid-template-columns:repeat(2,minmax(0,1fr))}.week:last-child{grid-column:1/-1}.week:last-child .tiles{grid-template-columns:repeat(4,minmax(0,1fr))}}
@@ -104,7 +104,7 @@ function accRow(year,wAll){
  const total=att.length*5,wrong=att.reduce((n,p)=>n+Math.min(5,wAll[key(year,p)]||0),0),right=total-wrong;
  const pct=total?Math.round(right/total*100):null;
  const d=document.createElement("div");d.className="acc"+(pct===null?" none":pct>=80?"":pct>=60?" mid":" low");
- d.innerHTML=`<span>${year} 年正确率</span><div class="acc-track"><i style="width:${pct||0}%"></i></div><strong>${pct===null?"—":pct+"%"}</strong><small>${pct===null?"未开始":right+"/"+total}</small>`;
+ d.innerHTML=`<span>${year} 年${att.length&&att.length<4?`（已做 ${att.length}/4 篇）`:""}</span><div class="acc-track"><i style="width:${pct||0}%"></i></div><strong>${pct===null?"—":pct+"%"}</strong><small>${pct===null?"未开始":`<b>${right*2}</b>/${total*2} 分`}</small>`;
  return d;
 }
 function render(){
