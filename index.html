@@ -103,8 +103,9 @@ function accRow(year,wAll){
  const att=[1,2,3,4].filter(p=>checked.has(key(year,p))||wAll[key(year,p)]);
  const total=att.length*5,wrong=att.reduce((n,p)=>n+Math.min(5,wAll[key(year,p)]||0),0),right=total-wrong;
  const pct=total?Math.round(right/total*100):null;
+ const wn=[1,2,3,4].reduce((n,p)=>n+(wAll[key(year,p)]||0),0);
  const d=document.createElement("div");d.className="acc"+(pct===null?" none":pct>=80?"":pct>=60?" mid":" low");
- d.innerHTML=`<span>${year} 年${att.length&&att.length<4?`（已做 ${att.length}/4 篇）`:""}</span><div class="acc-track"><i style="width:${pct||0}%"></i></div><strong>${pct===null?"—":pct+"%"}</strong><small>${pct===null?"未开始":`<b>${right*2}</b>/${total*2} 分`}</small>`;
+ d.innerHTML=`<span>${year} 年${att.length&&att.length<4?`（已做 ${att.length}/4 篇）`:""}${wn?` · <b style="color:#c23b2e">错 ${wn} 题</b>`:""}</span><div class="acc-track"><i style="width:${pct||0}%"></i></div><strong>${pct===null?"—":pct+"%"}</strong><small>${pct===null?"未开始":`<b>${right*2}</b>/${total*2} 分`}</small>`;
  return d;
 }
 function render(){

@@ -79,7 +79,7 @@ select{height:40px;border:1px solid var(--line);border-radius:8px;background:tra
 </main>
 <div id="toast"></div>
 <script>
-var KEY='kaoyan_wrong_v2',META='kaoyan_wrong_meta';
+var KEY='kaoyan-wrong-v1',META='kaoyan_wrong_meta';
 var L=['A','B','C','D'],REASONS=['词义','定位','逻辑','态度','没读懂','粗心'];
 function load(){try{return JSON.parse(localStorage.getItem(KEY))||[]}catch(e){return []}}
 function save(){try{localStorage.setItem(KEY,JSON.stringify(data))}catch(e){toast('保存失败，请立刻导出备份')}}
@@ -103,7 +103,7 @@ function draw(){
 function commit(){
   if(!st.mine||!st.right){draw();return}
   if(st.mine===st.right){toast('我选和正确一样，没有记录');st.right=null;draw();return}
-  data.unshift({id:Date.now()+Math.random(),year:st.year,text:st.text,q:st.q,mine:st.mine,right:st.right,why:st.why||'',note:''});
+  data.unshift({id:Date.now()+Math.random(),year:st.year,text:st.text,q:st.q,mine:st.mine,right:st.right,why:st.why||'',note:'',done:false});
   save();toast('已记录：'+st.year+' Text'+st.text+' 第'+st.q+'题');
   st.q=st.q<5?st.q+1:1;st.mine=null;st.right=null;st.why=null;draw();render();
 }
@@ -122,7 +122,9 @@ function render(){
   if(!list.length){box.innerHTML='<p class="sm">还没有错题。在上面点选就能录入。</p>'}
   list.forEach(function(d){
     var el=document.createElement('div');el.className='item';
-    el.innerHTML='<button class="del" aria-label="删除">删除</button><div class="t">'+d.year+' Text '+d.text+' 第'+d.q+'题'+(d.why?' <span class="sm">· '+esc(d.why)+'</span>':'')+'</div><div class="ans">我选 <b>'+d.mine+'</b>　正确 <i>'+d.right+'</i></div>';
+    el.innerHTML='<button class="del" aria-label="删除">删除</button><div class="t">'+d.year+' Text '+d.text+(d.q?' 第'+d.q+'题':'')+(d.why?' <span class="sm">· '+esc(d.why)+'</span>':'')+'</div>'+((d.mine||d.right)?'<div class="ans">我选 <b>'+esc(d.mine||'-')+'</b>　正确 <i>'+esc(d.right||'-')+'</i></div>':'');
+    var lb=document.createElement('label');lb.className='sm';lb.innerHTML='<input type="checkbox"> 已掌握';
+    var cb=lb.firstChild;cb.checked=!!d.done;cb.onchange=function(){d.done=cb.checked;save()};el.appendChild(lb);
     var n=document.createElement('input');n.className='note';n.placeholder='点这里写笔记';n.value=d.note||'';
     n.onchange=function(){d.note=n.value;save()};el.appendChild(n);
     el.querySelector('.del').onclick=function(){if(confirm('删除这条错题？')){data=data.filter(function(x){return x!==d});save();render()}};
@@ -150,7 +152,7 @@ $('copy').onclick=function(){
 function merge(items){
   var seen={};data.forEach(function(d){seen[d.year+'-'+d.text+'-'+d.q+'-'+d.mine+'-'+d.right]=1});
   var add=0;items.forEach(function(d){
-    if(!d||!d.year||!d.mine||!d.right)return;
+    if(!d||!d.year)return;
     var k=d.year+'-'+d.text+'-'+d.q+'-'+d.mine+'-'+d.right;
     if(!seen[k]){seen[k]=1;d.id=d.id||Date.now()+Math.random();data.push(d);add++}});
   data.sort(function(a,b){return b.year-a.year||b.text-a.text||b.q-a.q});
