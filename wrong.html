@@ -1,179 +1,216 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="zh-CN">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>错题本</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#f5f7fb">
+<title>考研英语阅读错题本</title>
 <style>
-:root{--bg:#f6f4ee;--card:#fffdf8;--ink:#1d2b3a;--sub:#6b7480;--line:#d9d4c7;--red:#c0392b;--blue:#1f5f8b;--sel:#1f5f8b;--selt:#fff}
-@media (prefers-color-scheme:dark){:root{--bg:#161a1f;--card:#1f252c;--ink:#e8e6e0;--sub:#9aa3ad;--line:#333b44;--red:#e0675a;--blue:#6fb0dc;--sel:#6fb0dc;--selt:#10161c}}
-*{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 -apple-system,"PingFang SC",sans-serif;padding:env(safe-area-inset-top) 0 env(safe-area-inset-bottom)}
-main{max-width:720px;margin:0 auto;padding:14px}
-h1{font-size:22px;margin:6px 0 12px}
-section{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:12px;margin-bottom:12px}
-h2{font-size:15px;margin:0 0 8px;color:var(--sub);font-weight:600}
-.row{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px;align-items:center}
-.lab{width:52px;color:var(--sub);font-size:14px}
-button,select,input,textarea{font:inherit;color:inherit}
-.chip{min-width:44px;height:40px;padding:0 10px;border:1px solid var(--line);background:transparent;border-radius:8px;cursor:pointer}
-.chip.on{background:var(--sel);color:var(--selt);border-color:var(--sel)}
-.chip.bad.on{background:var(--red);border-color:var(--red);color:#fff}
-.btn{height:40px;padding:0 14px;border:1px solid var(--blue);color:var(--blue);background:transparent;border-radius:8px;cursor:pointer}
-.btn.fill{background:var(--blue);color:var(--selt)}
-textarea{width:100%;min-height:90px;border:1px solid var(--line);border-radius:8px;background:transparent;padding:8px}
-select{height:40px;border:1px solid var(--line);border-radius:8px;background:transparent;padding:0 8px}
-.item{border-top:1px solid var(--line);padding:10px 0}
-.item:first-child{border-top:0}
-.t{font-weight:600}
-.ans b{color:var(--red)}
-.ans i{font-style:normal;color:var(--blue);font-weight:600}
-.note{width:100%;border:0;border-bottom:1px dashed var(--line);background:transparent;padding:4px 0;margin-top:4px;font-size:14px}
-.sm{font-size:13px;color:var(--sub)}
-.warn{color:var(--red)}
-.del{border:0;background:none;color:var(--sub);cursor:pointer;float:right;padding:4px 8px}
-#toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom));transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:8px 14px;border-radius:8px;opacity:0;transition:opacity .2s;pointer-events:none}
-#toast.show{opacity:1}
+:root{--bg:#f5f7fb;--card:#fff;--ink:#202637;--muted:#687287;--line:#e6eaf1;--accent:#3659d9;--accent-soft:#edf1ff;--good:#198754;--bad:#c23b2e;--shadow:0 10px 30px rgba(28,42,75,.06)}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;line-height:1.55}
+.wrap{max-width:920px;margin:0 auto;padding:28px 16px 52px}
+.hero{padding:22px 24px;border-radius:24px;background:linear-gradient(135deg,#202f68,#4268e8);color:#fff;box-shadow:var(--shadow)}
+.hero h1{font-size:clamp(24px,5vw,32px);line-height:1.2;margin:0 0 6px}.hero p{margin:0;color:#e5eaff;font-size:14px}
+.hero a{display:inline-block;color:#fff;font-size:14px;margin-bottom:12px;text-decoration:none;opacity:.9}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:16px 0}
+.stat,.panel,.item{background:var(--card);border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow)}
+.stat{padding:16px}.stat .label{font-size:13px;color:var(--muted)}.stat strong{display:block;font-size:25px;margin-top:4px}
+.panel{padding:20px;margin-top:16px}
+.section-head{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:12px}.section-head h2{font-size:18px;margin:0}.muted{color:var(--muted);font-size:13px}
+.bars{display:grid;gap:8px}
+.bar{display:grid;grid-template-columns:7.5em 1fr 2em;gap:10px;align-items:center;font-size:13px;color:var(--muted)}
+.bar i{display:block;height:10px;border-radius:999px;background:linear-gradient(90deg,#e8776b,#c23b2e);min-width:4px}
+.bar em{font-style:normal;text-align:right}
+form{display:grid;gap:14px}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.f{display:grid;gap:5px;font-size:13px;color:var(--muted)}
+select,textarea{width:100%;font:inherit;font-size:16px;color:var(--ink);background:#fafbfe;border:1px solid var(--line);border-radius:12px;padding:11px 12px}
+textarea{min-height:76px;resize:vertical}
+.seg{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.seg button{padding:11px 0;font:700 16px inherit;font-family:inherit;border:1px solid var(--line);background:#fafbfe;color:var(--ink);border-radius:12px;cursor:pointer}
+.seg button.on.mine{background:var(--bad);color:#fff;border-color:var(--bad)}
+.seg button.on.right{background:var(--good);color:#fff;border-color:var(--good)}
+.btn{border:1px solid var(--line);border-radius:11px;padding:10px 14px;font-weight:650;background:#fff;color:var(--ink);cursor:pointer;font-family:inherit;font-size:15px}
+.btn.primary{background:var(--accent);color:#fff;border-color:var(--accent)}
+.btn:hover{filter:brightness(.97)}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.filters{display:flex;gap:8px;overflow-x:auto;padding-bottom:4px;margin-top:16px}
+.filters button{white-space:nowrap;border:1px solid var(--line);background:#fff;color:var(--ink);border-radius:999px;padding:7px 14px;font:inherit;font-size:14px;cursor:pointer}
+.filters button.on{background:var(--accent);color:#fff;border-color:var(--accent)}
+.list{display:grid;gap:12px;margin-top:12px}
+.item{padding:16px;border-left:5px solid var(--bad)}
+.item.done{border-left-color:var(--good);opacity:.75}
+.top{display:flex;justify-content:space-between;align-items:flex-start;gap:8px}
+.src{font-weight:700;font-size:16px}
+.tag{background:var(--accent-soft);color:var(--accent);border-radius:8px;padding:1px 9px;font-size:12px;font-weight:700;white-space:nowrap}
+.ans{margin-top:4px;font-size:15px}
+.ans .x{color:var(--bad);font-weight:700;text-decoration:line-through}.ans .v{color:var(--good);font-weight:700}
+.note{margin:8px 0 0;font-size:14px;color:var(--muted);white-space:pre-wrap}
+.acts{display:flex;gap:18px;margin-top:10px}
+.acts button{background:none;border:0;padding:4px 0;font:inherit;font-size:14px;font-weight:650;color:var(--accent);cursor:pointer}
+.acts .del{color:var(--bad)}
+.empty{text-align:center;color:var(--muted);padding:28px 0;font-size:14px}
+.actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:12px}
+@media(max-width:380px){.wrap{padding:16px 10px 36px}.stat strong{font-size:21px}.stat{padding:12px}}
 </style>
 </head>
 <body>
-<main>
-<h1>错题本</h1>
-<p id="backup" class="sm"></p>
+<div class="wrap">
+  <header class="hero">
+    <a href="index.html">‹ 返回打卡</a>
+    <h1>阅读错题本</h1>
+    <p>记下错因，再按错因复盘，比重复刷题更有效。</p>
+  </header>
 
-<section>
-  <h2>快速录入（点选后自动保存）</h2>
-  <div class="row"><span class="lab">年份</span><select id="year"></select>
-    <span class="lab" style="width:auto;margin-left:8px">Text</span><span id="texts"></span></div>
-  <div class="row"><span class="lab">题号</span><span id="qs"></span></div>
-  <div class="row"><span class="lab">我选</span><span id="mine"></span></div>
-  <div class="row"><span class="lab">正确</span><span id="right"></span></div>
-  <div class="row"><span class="lab">原因</span><span id="why"></span></div>
-  <div class="row"><button class="btn" id="undo">撤销上一条</button><span class="sm" id="hint">先点“我选”，再点“正确”，选完自动保存并跳到下一题</span></div>
-</section>
+  <section class="stats" aria-label="错题统计">
+    <div class="stat"><div class="label">错题总数</div><strong id="sTotal">0</strong></div>
+    <div class="stat"><div class="label">未掌握</div><strong id="sOpen">0</strong></div>
+    <div class="stat"><div class="label">近 7 天新增</div><strong id="sWeek">0</strong></div>
+  </section>
 
-<section>
-  <h2>批量录入（每行：年份 Text 题号 我选 正确）</h2>
-  <textarea id="bulk" placeholder="例：&#10;2019 2 3 B C&#10;2019 2 4 A D 逻辑反了"></textarea>
-  <div class="row" style="margin-top:8px"><button class="btn fill" id="bulkGo">批量添加</button></div>
-</section>
+  <section class="panel">
+    <div class="section-head"><h2>错因分布</h2><span class="muted">只统计未掌握的题</span></div>
+    <div class="bars" id="bars"></div>
+  </section>
 
-<section>
-  <h2>备份</h2>
-  <div class="row">
-    <button class="btn fill" id="exp">导出文件</button>
-    <button class="btn" id="copy">复制到剪贴板</button>
-    <button class="btn" id="impBtn">导入文件</button>
-    <input type="file" id="imp" accept=".json,application/json" hidden>
-  </div>
-  <textarea id="paste" placeholder="也可以把备份内容粘贴到这里，再点下面按钮" style="min-height:50px"></textarea>
-  <div class="row" style="margin-top:8px"><button class="btn" id="impPaste">从粘贴内容导入</button></div>
-  <p class="sm">导入时会与现有错题合并，不会覆盖。</p>
-</section>
+  <section class="panel">
+    <div class="section-head"><h2>记一道错题</h2><span class="muted" id="srcHint"></span></div>
+    <form id="form">
+      <div class="row">
+        <label class="f">年份<select id="year"></select></label>
+        <label class="f">题号<select id="qno"></select></label>
+      </div>
+      <div class="f">我的答案<div class="seg" id="mine"></div></div>
+      <div class="f">正确答案<div class="seg" id="right"></div></div>
+      <label class="f">错因<select id="reason"></select></label>
+      <label class="f">备注（定位句、生词、教训）<textarea id="memo" placeholder="例如：第 3 段 however 之后才是作者态度"></textarea></label>
+      <button class="btn primary" type="submit">保存错题</button>
+    </form>
+  </section>
 
-<section>
-  <h2>全部错题 <span id="cnt" class="sm"></span></h2>
-  <div class="row"><select id="filter"></select></div>
-  <div id="list"></div>
-</section>
-</main>
-<div id="toast"></div>
+  <div class="filters" id="filters"></div>
+  <div class="list" id="list"></div>
+
+  <section class="panel">
+    <div class="section-head"><h2>错题备份</h2><span class="muted">数据保存在当前浏览器</span></div>
+    <div class="actions">
+      <button class="btn primary" id="exp">导出错题备份</button>
+      <button class="btn" id="imp">导入备份</button>
+      <input type="file" id="file" accept="application/json,.json" hidden>
+    </div>
+  </section>
+</div>
+
 <script>
-var KEY='kaoyan-wrong-v1',META='kaoyan_wrong_meta';
-var L=['A','B','C','D'],REASONS=['词义','定位','逻辑','态度','没读懂','粗心'];
-function load(){try{return JSON.parse(localStorage.getItem(KEY))||[]}catch(e){return []}}
-function save(){try{localStorage.setItem(KEY,JSON.stringify(data))}catch(e){toast('保存失败，请立刻导出备份')}}
-function meta(){try{return JSON.parse(localStorage.getItem(META))||{}}catch(e){return {}}}
-var data=load(),st={year:2023,text:1,q:1,mine:null,right:null,why:null};
-var $=function(id){return document.getElementById(id)};
-function toast(m){var t=$('toast');t.textContent=m;t.className='show';clearTimeout(toast.h);toast.h=setTimeout(function(){t.className=''},1600)}
-function chips(id,arr,key,cls,fn){
-  var el=$(id);el.innerHTML='';
-  arr.forEach(function(v){
-    var b=document.createElement('button');b.className='chip '+(cls||'')+(st[key]===v?' on':'');b.textContent=v;
-    b.onclick=function(){fn(v)};el.appendChild(b)});
-}
-function draw(){
-  chips('texts',[1,2,3,4],'text','',function(v){st.text=v;draw()});
-  chips('qs',[1,2,3,4,5],'q','',function(v){st.q=v;draw()});
-  chips('mine',L,'mine','bad',function(v){st.mine=v;st.right=null;draw()});
-  chips('right',L,'right','',function(v){st.right=v;commit()});
-  chips('why',REASONS,'why','',function(v){st.why=st.why===v?null:v;draw()});
-}
-function commit(){
-  if(!st.mine||!st.right){draw();return}
-  if(st.mine===st.right){toast('我选和正确一样，没有记录');st.right=null;draw();return}
-  data.unshift({id:Date.now()+Math.random(),year:st.year,text:st.text,q:st.q,mine:st.mine,right:st.right,why:st.why||'',note:'',done:false});
-  save();toast('已记录：'+st.year+' Text'+st.text+' 第'+st.q+'题');
-  st.q=st.q<5?st.q+1:1;st.mine=null;st.right=null;st.why=null;draw();render();
-}
-$('undo').onclick=function(){if(data.length){var d=data.shift();save();render();toast('已撤销：'+d.year+' Text'+d.text+' 第'+d.q+'题')}};
 (function(){
-  var y=$('year'),f=$('filter');
-  for(var i=2023;i>=2007;i--){y.add(new Option(i,i))}
-  f.add(new Option('全部年份','all'));for(var j=2023;j>=2007;j--){f.add(new Option(j,j))}
-  y.onchange=function(){st.year=+y.value};
-  f.onchange=render;
+  var KEY="kaoyan-wrong-v1";
+  var REASONS=["词汇不会","长难句没读懂","定位错误","过度推断","主旨/态度偏了","没时间","粗心","其他"];
+  var data=[],filter={reason:"全部",status:"open"},pick={mine:"",right:""};
+  function $(id){return document.getElementById(id)}
+  function esc(s){return String(s).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})}
+  function load(){try{var a=JSON.parse(localStorage.getItem(KEY)||"[]");data=Array.isArray(a)?a:[]}catch(e){data=[]}}
+  function save(){try{localStorage.setItem(KEY,JSON.stringify(data))}catch(e){alert("浏览器无法保存，请检查是否开启了无痕模式")}}
+  function textOf(q){return Math.floor((q-21)/5)+1}
+
+  var ys="";for(var y=2023;y>=2007;y--)ys+="<option>"+y+"</option>";$("year").innerHTML=ys;
+  var qs="";for(var t=1;t<=4;t++){qs+='<optgroup label="Text '+t+'">';for(var q=21+(t-1)*5;q<=20+t*5;q++)qs+="<option>"+q+"</option>";qs+="</optgroup>"}
+  $("qno").innerHTML=qs;
+  $("reason").innerHTML=REASONS.map(function(r){return"<option>"+r+"</option>"}).join("");
+  function hint(){$("srcHint").textContent="Text "+textOf(+$("qno").value)}
+  $("qno").onchange=hint;hint();
+
+  ["mine","right"].forEach(function(k){
+    var box=$(k);
+    "ABCD".split("").forEach(function(c){
+      var b=document.createElement("button");b.type="button";b.textContent=c;
+      b.onclick=function(){pick[k]=c;[].forEach.call(box.children,function(x){x.className=""});b.className="on "+k};
+      box.appendChild(b);
+    });
+  });
+
+  $("form").onsubmit=function(e){
+    e.preventDefault();
+    if(!pick.mine||!pick.right){alert("请选择“我的答案”和“正确答案”");return}
+    if(pick.mine===pick.right){alert("两个答案相同，不算错题");return}
+    var q=+$("qno").value;
+    if(data.some(function(d){return String(d.year)===$("year").value&&String(d.q)===String(q)})){alert("这道题已经记录过了，请先删除旧记录再重录");return}
+    data.unshift({id:Date.now(),year:$("year").value,text:String(textOf(q)),q:String(q),
+      mine:pick.mine,right:pick.right,reason:$("reason").value,memo:$("memo").value.trim(),done:false,at:Date.now()});
+    save();$("memo").value="";
+    pick={mine:"",right:""};
+    ["mine","right"].forEach(function(k){[].forEach.call($(k).children,function(x){x.className=""})});
+    if(q<40){$("qno").value=q+1;hint()}
+    render();
+  };
+
+  function render(){
+    var week=Date.now()-7*864e5,open=data.filter(function(d){return!d.done});
+    $("sTotal").textContent=data.length;
+    $("sOpen").textContent=open.length;
+    $("sWeek").textContent=data.filter(function(d){return d.at>week}).length;
+
+    var cnt={};REASONS.forEach(function(r){cnt[r]=0});
+    open.forEach(function(d){cnt[d.reason]=(cnt[d.reason]||0)+1});
+    var max=Math.max.apply(null,Object.keys(cnt).map(function(k){return cnt[k]}).concat([1]));
+    var shown=REASONS.filter(function(r){return cnt[r]});
+    $("bars").innerHTML=shown.length?shown.map(function(r){
+      return'<div class="bar"><span>'+r+'</span><i style="width:'+(cnt[r]/max*100)+'%"></i><em>'+cnt[r]+'</em></div>'}).join(""):
+      '<div class="empty" style="padding:6px 0">暂无数据。记下第一道错题后，这里会显示你最常错在哪。</div>';
+
+    var html=[["open","未掌握"],["done","已掌握"],["all","全部"]].map(function(f){
+      return'<button data-k="status" data-v="'+f[0]+'" class="'+(filter.status===f[0]?"on":"")+'">'+f[1]+'</button>'}).join("");
+    html+=["全部"].concat(REASONS).map(function(r){
+      return'<button data-k="reason" data-v="'+r+'" class="'+(filter.reason===r?"on":"")+'">'+r+'</button>'}).join("");
+    $("filters").innerHTML=html;
+    [].forEach.call($("filters").children,function(b){b.onclick=function(){filter[b.dataset.k]=b.dataset.v;render()}});
+
+    var rows=data.filter(function(d){
+      if(filter.status==="open"&&d.done)return false;
+      if(filter.status==="done"&&!d.done)return false;
+      return filter.reason==="全部"||d.reason===filter.reason;
+    });
+    $("list").innerHTML=rows.length?rows.map(function(d){
+      return'<article class="item'+(d.done?" done":"")+'">'+
+        '<div class="top"><span class="src">'+esc(d.year)+' 年 Text '+esc(d.text)+' · 第 '+esc(d.q)+' 题</span><span class="tag">'+esc(d.reason)+'</span></div>'+
+        '<div class="ans">我选 <span class="x">'+esc(d.mine)+'</span>　正确 <span class="v">'+esc(d.right)+'</span></div>'+
+        (d.memo?'<p class="note">'+esc(d.memo)+'</p>':"")+
+        '<div class="acts"><button data-a="done" data-id="'+d.id+'">'+(d.done?"标为未掌握":"标为已掌握")+'</button>'+
+        '<button class="del" data-a="del" data-id="'+d.id+'">删除</button></div></article>'}).join(""):
+      '<div class="empty">这里没有错题。</div>';
+    [].forEach.call($("list").querySelectorAll("button[data-a]"),function(b){
+      b.onclick=function(){
+        var id=+b.dataset.id,i=data.findIndex(function(x){return x.id===id});
+        if(i<0)return;
+        if(b.dataset.a==="del"){if(confirm("确定删除这道错题？"))data.splice(i,1)}
+        else data[i].done=!data[i].done;
+        save();render();
+      };
+    });
+  }
+
+  $("exp").onclick=function(){
+    var blob=new Blob([JSON.stringify({app:"考研英语阅读错题本",version:1,wrong:data},null,2)],{type:"application/json"});
+    var a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="考研英语阅读错题备份.json";a.click();URL.revokeObjectURL(a.href);
+  };
+  $("imp").onclick=function(){$("file").click()};
+  $("file").onchange=function(){
+    var f=this.files[0],input=this;if(!f)return;
+    var r=new FileReader();
+    r.onload=function(){
+      try{
+        var obj=JSON.parse(r.result),arr=Array.isArray(obj)?obj:obj.wrong;
+        if(!Array.isArray(arr))throw 0;
+        var ids={};data.forEach(function(d){ids[d.id]=1});
+        arr.forEach(function(d){if(d&&d.id&&d.year&&d.mine&&d.right&&!ids[d.id])data.push(d)});
+        data.sort(function(a,b){return b.at-a.at});save();render();alert("导入成功！");
+      }catch(e){alert("无法读取这个备份文件，请选择本页导出的 JSON 文件。")}
+      input.value="";
+    };
+    r.readAsText(f);
+  };
+
+  load();render();
 })();
-function render(){
-  var f=$('filter').value,list=data.filter(function(d){return f==='all'||d.year==f});
-  $('cnt').textContent='（'+list.length+' / '+data.length+'）';
-  var box=$('list');box.innerHTML='';
-  if(!list.length){box.innerHTML='<p class="sm">还没有错题。在上面点选就能录入。</p>'}
-  list.forEach(function(d){
-    var el=document.createElement('div');el.className='item';
-    el.innerHTML='<button class="del" aria-label="删除">删除</button><div class="t">'+d.year+' Text '+d.text+(d.q?' 第'+d.q+'题':'')+(d.why?' <span class="sm">· '+esc(d.why)+'</span>':'')+'</div>'+((d.mine||d.right)?'<div class="ans">我选 <b>'+esc(d.mine||'-')+'</b>　正确 <i>'+esc(d.right||'-')+'</i></div>':'');
-    var lb=document.createElement('label');lb.className='sm';lb.innerHTML='<input type="checkbox"> 已掌握';
-    var cb=lb.firstChild;cb.checked=!!d.done;cb.onchange=function(){d.done=cb.checked;save()};el.appendChild(lb);
-    var n=document.createElement('input');n.className='note';n.placeholder='点这里写笔记';n.value=d.note||'';
-    n.onchange=function(){d.note=n.value;save()};el.appendChild(n);
-    el.querySelector('.del').onclick=function(){if(confirm('删除这条错题？')){data=data.filter(function(x){return x!==d});save();render()}};
-    box.appendChild(el)});
-  backupInfo();
-}
-function esc(s){return String(s).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
-function backupInfo(){
-  var m=meta(),p=$('backup');
-  if(!data.length){p.textContent='';return}
-  if(!m.last){p.innerHTML='<span class="warn">还没有导出过备份，建议现在导出一次。</span>'}
-  else{var days=Math.floor((Date.now()-m.last)/864e5);p.innerHTML=days>=3?'<span class="warn">距离上次备份已 '+days+' 天，建议再导出一次。</span>':'上次备份：'+(days===0?'今天':days+' 天前')}
-}
-function stamp(){try{localStorage.setItem(META,JSON.stringify({last:Date.now()}))}catch(e){}backupInfo()}
-function payload(){return JSON.stringify({app:'kaoyan-wrong',v:2,exported:new Date().toISOString(),items:data},null,1)}
-$('exp').onclick=function(){
-  var b=new Blob([payload()],{type:'application/json'}),a=document.createElement('a');
-  a.href=URL.createObjectURL(b);a.download='错题本备份-'+new Date().toISOString().slice(0,10)+'.json';
-  document.body.appendChild(a);a.click();a.remove();stamp();toast('已导出');
-};
-$('copy').onclick=function(){
-  var t=payload();
-  (navigator.clipboard?navigator.clipboard.writeText(t):Promise.reject()).then(function(){stamp();toast('已复制')},function(){$('paste').value=t;$('paste').select();toast('请手动全选复制')});
-};
-function merge(items){
-  var seen={};data.forEach(function(d){seen[d.year+'-'+d.text+'-'+d.q+'-'+d.mine+'-'+d.right]=1});
-  var add=0;items.forEach(function(d){
-    if(!d||!d.year)return;
-    var k=d.year+'-'+d.text+'-'+d.q+'-'+d.mine+'-'+d.right;
-    if(!seen[k]){seen[k]=1;d.id=d.id||Date.now()+Math.random();data.push(d);add++}});
-  data.sort(function(a,b){return b.year-a.year||b.text-a.text||b.q-a.q});
-  save();render();toast('导入 '+add+' 条');
-}
-function importText(t){try{var o=JSON.parse(t);merge(Array.isArray(o)?o:o.items||[])}catch(e){toast('内容无法识别')}}
-$('impBtn').onclick=function(){$('imp').click()};
-$('imp').onchange=function(){var f=this.files[0];if(!f)return;var r=new FileReader();r.onload=function(){importText(r.result)};r.readAsText(f);this.value=''};
-$('impPaste').onclick=function(){importText($('paste').value)};
-$('bulkGo').onclick=function(){
-  var add=[],bad=0;
-  $('bulk').value.split(/\n/).forEach(function(line){
-    line=line.trim();if(!line)return;
-    var m=line.match(/^(20\d\d)\s+(?:text)?\s*([1-4])\s+([1-5])\s+([A-Da-d])\s+([A-Da-d])\s*(.*)$/i);
-    if(!m||m[4].toUpperCase()===m[5].toUpperCase()){bad++;return}
-    add.push({year:+m[1],text:+m[2],q:+m[3],mine:m[4].toUpperCase(),right:m[5].toUpperCase(),why:'',note:m[6]||''})});
-  if(add.length)merge(add);
-  $('bulk').value=bad?'（有 '+bad+' 行格式不对，已跳过）':'';
-  if(bad)toast(bad+' 行格式不对');
-};
-draw();render();
 </script>
 </body>
 </html>
